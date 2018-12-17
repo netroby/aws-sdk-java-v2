@@ -43,6 +43,8 @@ public class Operation {
 
     private boolean endpointoperation;
 
+    private EndpointTrait endpoint;
+
     @JsonProperty("authtype")
     private AuthType authType = AuthType.IAM;
 
@@ -155,5 +157,13 @@ public class Operation {
 
     public void setEndpointoperation(boolean endpointoperation) {
         this.endpointoperation = endpointoperation;
+    }
+
+    public EndpointTrait getEndpoint() {
+        return endpoint;
+    }
+
+    public void setEndpoint(EndpointTrait endpoint) {
+        this.endpoint = endpoint;
     }
 }

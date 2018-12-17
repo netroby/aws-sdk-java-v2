@@ -20,7 +20,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>software.amazon.awssdk</groupId>
     <artifactId>aws-sdk-java-pom</artifactId>
-    <version>2.1.1-SNAPSHOT</version>
+    <version>2.2.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>AWS Java SDK :: Parent</name>
     <description>The Amazon Web Services SDK for Java provides Java APIs
@@ -61,6 +61,7 @@
         <module>codegen-maven-plugin</module>
         <module>bundle</module>
         <module>build-tools</module>
+        <module>release-scripts</module>
         <module>test/dynamodbdocument-v1</module>
         <module>test/dynamodbmapper-v1</module>
         <module>test/http-client-tests</module>
@@ -70,6 +71,7 @@
         <module>test/test-utils</module>
         <module>test/codegen-generated-classes-test</module>
         <module>test/sdk-benchmarks</module>
+        <module>test/module-path-tests</module>
         <module>utils</module>
         <module>codegen-lite</module>
         <module>codegen-lite-maven-plugin</module>
@@ -80,7 +82,7 @@
     <properties>
         <awsjavasdk.version>${project.version}</awsjavasdk.version>
         <flow.version>1.7</flow.version>
-        <jackson.version>2.9.6</jackson.version>
+        <jackson.version>2.9.7</jackson.version>
         <ion.java.version>1.2.0</ion.java.version>
         <commons.lang.version>3.4</commons.lang.version>
         <wiremock.version>2.18.0</wiremock.version>
@@ -88,11 +90,11 @@
         <log4j.version>1.2.17</log4j.version>
         <commons.io.version>2.5</commons.io.version>
         <equalsverifier.version>2.3.3</equalsverifier.version>
-        <netty.version>4.1.31.Final</netty.version>
+        <netty.version>4.1.32.Final</netty.version>
         <unitils.version>3.3</unitils.version>
         <xmlunit.version>1.3</xmlunit.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spotbugs.version>3.1.3.1</spotbugs.version>
+        <spotbugs.version>3.1.9</spotbugs.version>
         <netty-reactive-streams-http.version>2.0.0</netty-reactive-streams-http.version>
         <freemarker.version>2.3.24-incubating</freemarker.version>
         <javapoet.verion>1.11.1</javapoet.verion>
@@ -686,8 +688,49 @@
                                 <configuration>
                                     <includes>
                                         <include>**/*IntegrationTest.java</include>
+                                        <include>**/*IntegrationTests.java</include>
                                         <include>**/*IntegTest.java</include>
                                         <include>**/RunCucumberTest.java</include>
+                                    </includes>
+                                    <trimStackTrace>false</trimStackTrace>
+                                    <rerunFailingTestsCount>2</rerunFailingTestsCount>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>simple-method-integration-tests</id>
+            <activation>
+                <property>
+                    <name>doRelease</name>
+                </property>
+            </activation>
+            <properties>
+                <checkstyle.skip>true</checkstyle.skip>
+                <spotbugs.skip>true</spotbugs.skip>
+                <skip.unit.tests>true</skip.unit.tests>
+                <mdep.analyze.skip>true</mdep.analyze.skip>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>${maven-failsafe-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <phase>integration-test</phase>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                                <configuration>
+                                    <includes>
+                                        <include>**/SimpleMethodsIntegrationTest.java</include>
                                     </includes>
                                     <trimStackTrace>false</trimStackTrace>
                                     <rerunFailingTestsCount>2</rerunFailingTestsCount>
@@ -1085,6 +1128,10 @@
                                 <group>
                                     <title>WorkDocs</title>
                                     <packages>software.amazon.awssdk.services.workdocs*</packages>
+                                </group>
+                                <group>
+                                    <title>CodeDeploy</title>
+                                    <packages>software.amazon.awssdk.services.codedeploy*</packages>
                                 </group>
                                 <group>
                                     <title>Common</title>

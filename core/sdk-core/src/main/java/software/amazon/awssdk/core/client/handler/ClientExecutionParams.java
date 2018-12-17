@@ -41,6 +41,8 @@ public final class ClientExecutionParams<InputT extends SdkRequest, OutputT> {
     private HttpResponseHandler<OutputT> responseHandler;
     private HttpResponseHandler<? extends SdkException> errorResponseHandler;
     private boolean fullDuplex;
+    private String hostPrefixExpression;
+    private String operationName;
 
     public Marshaller<InputT> getMarshaller() {
         return marshaller;
@@ -107,6 +109,31 @@ public final class ClientExecutionParams<InputT extends SdkRequest, OutputT> {
      */
     public ClientExecutionParams<InputT, OutputT> withFullDuplex(boolean fullDuplex) {
         this.fullDuplex = fullDuplex;
+        return this;
+    }
+
+    public String getOperationName() {
+        return operationName;
+    }
+
+    /**
+     * Sets the operation name of the API.
+     */
+    public ClientExecutionParams<InputT, OutputT> withOperationName(String operationName) {
+        this.operationName = operationName;
+        return this;
+    }
+
+    public String hostPrefixExpression() {
+        return hostPrefixExpression;
+    }
+
+    /**
+     * Sets the resolved host prefix expression that will be added as a prefix to the original endpoint.
+     * This value is present only if the operation is tagged with endpoint trait.
+     */
+    public ClientExecutionParams<InputT, OutputT> hostPrefixExpression(String hostPrefixExpression) {
+        this.hostPrefixExpression = hostPrefixExpression;
         return this;
     }
 }

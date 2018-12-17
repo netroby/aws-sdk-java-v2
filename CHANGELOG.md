@@ -1,3 +1,86 @@
+# __2.2.0__ __2018-12-14__
+## __AWS SDK for Java v2__
+  - ### Features
+    - Adds the operation name of the calling API to the ExecutionContext class. This exposes a way to get the API name from within an ExecutionInterceptor.
+    - Updated to the latest service models.
+
+## __Amazon S3__
+  - ### Bugfixes
+    - Modify type of S3Object#size member from integer to long. This is a breaking change for customers who are using the size() method currently
+    - S3 putObject API using UrlConnectionHttpClient goes into infinite loop. See https://github.com/aws/aws-sdk-java-v2/pull/942 for more details.
+
+## __Netty NIO HTTP Client__
+  - ### Bugfixes
+    - Fix a bug where it's possible for an HTTP2 channel pool to be closed while some channels are still being released causing them to be left open and leaked.
+
+## __URLConnection HTTP Client__
+  - ### Features
+    - Adding a hook to enable custom creation of the initial `HttpURLConnection`. This enables customers to control how a connection is established for a given `URL` including handling any required proxy configuration etc.
+
+# __2.1.4__ __2018-12-07__
+## __AWS CodeDeploy__
+  - ### Features
+    - Supporting AWS CodeDeploy
+
+## __AWS SDK for Java v2__
+  - ### Features
+    - Add `modifyException` API to `ExecutionInterceptor`.
+    - Add application/gzip mime type
+    - Update spot bugs version to 3.1.9
+    - Updated to the latest service models.
+
+  - ### Bugfixes
+    - Fix infinite stream of results bug in auto paginator APIs when the next token is an empty string
+    - Fixes nullpointerexception when server responds with null values in map.
+    - Use the class loader that loaded the SDK to load the HTTP implementations. See [#56](https://github.com/aws/aws-sdk-java-v2/issues/56)
+
+## __Amazon S3__
+  - ### Bugfixes
+    - Turns off trailing checksums when using SSE-C or SSE-KMS
+    - Update S3 headObject/headBucket operations to throw NoSuchKey/NoSuchException when S3 is returning 404. See [#123](https://github.com/aws/aws-sdk-java-v2/issues/123), [#544](https://github.com/aws/aws-sdk-java-v2/issues/544)
+
+## __Netty NIO Async HTTP Client__
+  - ### Bugfixes
+    - Close created `ChannelPool`s in `close()` method.
+    - Fix the issue where streaming requests with `Expect: 100-continue` header sometimes are hanging because 100Continue response message is not being read automatically. See [#459](https://github.com/aws/aws-sdk-java-v2/issues/459)
+
+## __core__
+  - ### Features
+    - Netty 4.1.32.Final
+
+# __2.1.3__ __2018-11-29__
+## __AWS SDK for Java v2__
+  - ### Features
+    - Updated to the latest service models.
+
+# __2.1.2__ __2018-11-28__
+## __AWS SDK for Java v2__
+  - ### Features
+    - Updated to the latest service models.
+
+## __core__
+  - ### Features
+    - Jackson 2.9.6 -> 2.9.7
+
+# __2.1.1__ __2018-11-27__
+## __AWS Organizations__
+  - ### Bugfixes
+    - Add `organizations` to `aws-sdk-java` module.
+
+## __AWS SDK for Java V2__
+  - ### Bugfixes
+    - Fixes Issue [#864](https://github.com/aws/aws-sdk-java-v2/issues/864) by checking for embedded JSON objects while unmarshalling bytes.
+
+## __AWS SDK for Java v2__
+  - ### Features
+    - Updated to the latest service models.
+    - Updated to the latest service models.
+
+  - ### Bugfixes
+    - Fix async pagination javadocs to use the correct method name `SdkPublisher#subscribe`.
+    - Fixed an issue where close() and abort() weren't being honored for streaming responses in all cases.
+    - Preserve computedChecksum in `ChecksumValidatingInputStream` so that it doesn't throw error if it validates more than once. See [#873](https://github.com/aws/aws-sdk-java-v2/issues/873)
+
 # __2.1.0__ __2018-11-19__
 ## __AWS SDK for Java v2__
   - ### Features

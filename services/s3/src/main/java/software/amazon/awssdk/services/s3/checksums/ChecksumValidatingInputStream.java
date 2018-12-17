@@ -21,9 +21,10 @@ import java.nio.ByteBuffer;
 import software.amazon.awssdk.annotations.SdkInternalApi;
 import software.amazon.awssdk.core.checksums.SdkChecksum;
 import software.amazon.awssdk.core.exception.SdkClientException;
+import software.amazon.awssdk.http.Abortable;
 
 @SdkInternalApi
-public class ChecksumValidatingInputStream extends InputStream {
+public class ChecksumValidatingInputStream extends InputStream implements Abortable {
     private static final int CHECKSUM_SIZE = 16;
 
     private final SdkChecksum checkSum;
@@ -31,6 +32,9 @@ public class ChecksumValidatingInputStream extends InputStream {
     private long strippedLength;
     private byte[] streamChecksum = new byte[CHECKSUM_SIZE];
     private long lengthRead = 0;
+    // Preserve the computed checksum because some InputStream readers (e.g., java.util.Properties) read more than once at the
+    // end of the stream.
+    private Integer computedChecksum;
 
     /**
      * Creates an input stream using the specified Checksum, input stream, and length.
@@ -146,6 +150,18 @@ public class ChecksumValidatingInputStream extends InputStream {
         }
     }
 
+    @Override
+    public void abort() {
+        if (inputStream instanceof Abortable) {
+            ((Abortable) inputStream).abort();
+        }
+    }
+
+    @Override
+    public void close() throws IOException {
+        inputStream.close();
+    }
+
     /**
      * Gets the stream's checksum as an integer.
      *
@@ -158,11 +174,15 @@ public class ChecksumValidatingInputStream extends InputStream {
 
     private void validateAndThrow() {
         int streamChecksumInt = getStreamChecksum();
-        int computedChecksumInt = ByteBuffer.wrap(checkSum.getChecksumBytes()).getInt();
-        if (streamChecksumInt != computedChecksumInt) {
+        if (computedChecksum == null) {
+            computedChecksum = ByteBuffer.wrap(checkSum.getChecksumBytes()).getInt();
+        }
+
+        if (streamChecksumInt != computedChecksum) {
             throw SdkClientException.builder().message(
                 String.format("Data read has a different checksum than expected. Was %d, but expected %d",
-                              computedChecksumInt, streamChecksumInt)).build();
+                              computedChecksum, streamChecksumInt)).build();
         }
     }
+
 }

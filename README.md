@@ -11,6 +11,7 @@ artifact source.
 
 * [SDK Homepage][sdk-website]
 * [1.11 to 2.0 Changelog](docs/LaunchChangelog.md)
+* [Sample Code](#sample-code)
 * [API Docs][docs-api]
 * [Developer Guide][docs-guide] ([source][docs-guide-source])
 * [Issues][sdk-issues]
@@ -43,7 +44,7 @@ You can import the whole SDK into your project (includes all services) as follow
 <dependency>
   <groupId>software.amazon.awssdk</groupId>
   <artifactId>aws-sdk-java</artifactId>
-  <version>2.1.0</version>
+  <version>2.2.0</version>
 </dependency>
 ```
 
@@ -55,12 +56,12 @@ Alternatively you can add dependencies for the specific services you use only:
 <dependency>
   <groupId>software.amazon.awssdk</groupId>
   <artifactId>ec2</artifactId>
-  <version>2.1.0</version>
+  <version>2.2.0</version>
 </dependency>
 <dependency>
   <groupId>software.amazon.awssdk</groupId>
   <artifactId>s3</artifactId>
-  <version>2.1.0</version>
+  <version>2.2.0</version>
 </dependency>
 ```
 
@@ -74,7 +75,7 @@ To automatically manage module versions (currently all modules have the same ver
     <dependency>
       <groupId>software.amazon.awssdk</groupId>
       <artifactId>bom</artifactId>
-      <version>2.1.0</version>
+      <version>2.2.0</version>
       <type>pom</type>
       <scope>import</scope>
     </dependency>
@@ -111,12 +112,17 @@ See the [Set up the AWS SDK for Java][docs-setup] section of the developer guide
 
 ## Building From Source
 
-Once you check out the code from GitHub, you can build it using Maven. To disable the GPG-signing
-in the build, use:
+Once you check out the code from GitHub, you can build it using Maven.
 
 ```sh
-mvn clean install -Dgpg.skip=true
+mvn clean install
 ```
+
+## Sample Code
+You can find sample code for v2 in the following places:
+
+* [aws-doc-sdk-examples] repo.
+* Integration tests in this repo. They are located in the `it` directory under each service module, eg: [s3-integration-tests]
 
 ## Giving Feedback
 We need your help in making this SDK great. Please participate in the community and contribute to this effort by submitting issues, participating in discussion forums and submitting pull requests through the following channels.
@@ -145,3 +151,5 @@ We need your help in making this SDK great. Please participate in the community 
 [support-center]: https://console.aws.amazon.com/support/
 [console]: https://console.aws.amazon.com
 [bom]: http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22software.amazon.awssdk%22%20AND%20a%3A%22bom%22
+[aws-doc-sdk-examples]: https://github.com/awsdocs/aws-doc-sdk-examples/tree/master/javav2
+[s3-integration-tests]: https://github.com/aws/aws-sdk-java-v2/tree/master/services/s3/src/it/java/software/amazon/awssdk/services/s3

@@ -17,10 +17,12 @@ package software.amazon.awssdk.protocols.json.internal.dom;
 
 import java.util.List;
 import java.util.Map;
+import software.amazon.awssdk.annotations.SdkInternalApi;
 
 /**
  * DOM interface for reading a JSON document.
  */
+@SdkInternalApi
 public interface SdkJsonNode {
 
     /**
@@ -34,6 +36,13 @@ public interface SdkJsonNode {
      * @return The value of the node as text. Returns null for most nodes except for {@link SdkScalarNode}.
      */
     default String asText() {
+        return null;
+    }
+
+    /**
+     * @return The embedded object value of the node. See {@link SdkEmbeddedObject}.
+     */
+    default Object embeddedObject() {
         return null;
     }
 

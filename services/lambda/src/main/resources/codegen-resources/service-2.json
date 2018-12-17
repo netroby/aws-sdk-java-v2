@@ -10,6 +10,26 @@
     "uid":"lambda-2015-03-31"
   },
   "operations":{
+    "AddLayerVersionPermission":{
+      "name":"AddLayerVersionPermission",
+      "http":{
+        "method":"POST",
+        "requestUri":"/2018-10-31/layers/{LayerName}/versions/{VersionNumber}/policy",
+        "responseCode":201
+      },
+      "input":{"shape":"AddLayerVersionPermissionRequest"},
+      "output":{"shape":"AddLayerVersionPermissionResponse"},
+      "errors":[
+        {"shape":"ServiceException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ResourceConflictException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"InvalidParameterValueException"},
+        {"shape":"PolicyLengthExceededException"},
+        {"shape":"PreconditionFailedException"}
+      ],
+      "documentation":"<p>Adds permissions to the resource-based policy of a version of a function layer. Use this action to grant layer usage permission to other accounts. You can grant permission to a single account, all AWS accounts, or all accounts in an organization.</p> <p>To revoke permission, call <a>RemoveLayerVersionPermission</a> with the statement ID that you specified when you added it.</p>"
+    },
     "AddPermission":{
       "name":"AddPermission",
       "http":{
@@ -64,7 +84,7 @@
         {"shape":"TooManyRequestsException"},
         {"shape":"ResourceNotFoundException"}
       ],
-      "documentation":"<p>Identifies a poll-based event source for a Lambda function. It can be either an Amazon Kinesis or DynamoDB stream. AWS Lambda invokes the specified function when records are posted to the event source.</p> <p>This association between a poll-based source and a Lambda function is called the event source mapping.</p> <p>You provide mapping information (for example, which stream or SQS queue to read from and which Lambda function to invoke) in the request body.</p> <p>Amazon Kinesis or DynamoDB stream event sources can be associated with multiple AWS Lambda functions and a given Lambda function can be associated with multiple AWS event sources. For Amazon SQS, you can configure multiple queues as event sources for a single Lambda function, but an SQS queue can be mapped only to a single Lambda function.</p> <p>You can configure an SQS queue in an account separate from your Lambda function's account. Also the queue needs to reside in the same AWS region as your function. </p> <p>If you are using versioning, you can specify a specific function version or an alias via the function name parameter. For more information about versioning, see <a href=\"http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html\">AWS Lambda Function Versioning and Aliases</a>. </p> <p>This operation requires permission for the <code>lambda:CreateEventSourceMapping</code> action.</p>"
+      "documentation":"<p>Creates a mapping between an event source and an AWS Lambda function. Lambda reads items from the event source and triggers the function.</p> <p>For details about each event source type, see the following topics.</p> <ul> <li> <p> <a href=\"http://docs.aws.amazon.com/lambda/latest/dg/with-kinesis.html\">Using AWS Lambda with Amazon Kinesis</a> </p> </li> <li> <p> <a href=\"http://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html\">Using AWS Lambda with Amazon SQS</a> </p> </li> <li> <p> <a href=\"http://docs.aws.amazon.com/lambda/latest/dg/with-ddb.html\">Using AWS Lambda with Amazon DynamoDB</a> </p> </li> </ul>"
     },
     "CreateFunction":{
       "name":"CreateFunction",
@@ -116,7 +136,7 @@
         {"shape":"TooManyRequestsException"},
         {"shape":"ResourceInUseException"}
       ],
-      "documentation":"<p>Removes an event source mapping. This means AWS Lambda will no longer invoke the function for events in the associated source.</p> <p>This operation requires permission for the <code>lambda:DeleteEventSourceMapping</code> action.</p>"
+      "documentation":"<p>Deletes an event source mapping.</p>"
     },
     "DeleteFunction":{
       "name":"DeleteFunction",
@@ -150,6 +170,20 @@
         {"shape":"InvalidParameterValueException"}
       ],
       "documentation":"<p>Removes concurrent execution limits from this function. For more information, see <a href=\"http://docs.aws.amazon.com/lambda/latest/dg/concurrent-executions.html\">Managing Concurrency</a>.</p>"
+    },
+    "DeleteLayerVersion":{
+      "name":"DeleteLayerVersion",
+      "http":{
+        "method":"DELETE",
+        "requestUri":"/2018-10-31/layers/{LayerName}/versions/{VersionNumber}",
+        "responseCode":204
+      },
+      "input":{"shape":"DeleteLayerVersionRequest"},
+      "errors":[
+        {"shape":"ServiceException"},
+        {"shape":"TooManyRequestsException"}
+      ],
+      "documentation":"<p>Deletes a version of a function layer. Deleted versions can no longer be viewed or added to functions. However, a copy of the version remains in Lambda until no functions refer to it.</p>"
     },
     "GetAccountSettings":{
       "name":"GetAccountSettings",
@@ -198,7 +232,7 @@
         {"shape":"InvalidParameterValueException"},
         {"shape":"TooManyRequestsException"}
       ],
-      "documentation":"<p>Returns configuration information for the specified event source mapping (see <a>CreateEventSourceMapping</a>).</p> <p>This operation requires permission for the <code>lambda:GetEventSourceMapping</code> action.</p>"
+      "documentation":"<p>Returns details about an event source mapping.</p>"
     },
     "GetFunction":{
       "name":"GetFunction",
@@ -233,6 +267,40 @@
         {"shape":"InvalidParameterValueException"}
       ],
       "documentation":"<p>Returns the configuration information of the Lambda function. This the same information you provided as parameters when uploading the function by using <a>CreateFunction</a>.</p> <p>If you are using the versioning feature, you can retrieve this information for a specific function version by using the optional <code>Qualifier</code> parameter and specifying the function version or alias that points to it. If you don't provide it, the API returns information about the $LATEST version of the function. For more information about versioning, see <a href=\"http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html\">AWS Lambda Function Versioning and Aliases</a>.</p> <p>This operation requires permission for the <code>lambda:GetFunctionConfiguration</code> operation.</p>"
+    },
+    "GetLayerVersion":{
+      "name":"GetLayerVersion",
+      "http":{
+        "method":"GET",
+        "requestUri":"/2018-10-31/layers/{LayerName}/versions/{VersionNumber}",
+        "responseCode":200
+      },
+      "input":{"shape":"GetLayerVersionRequest"},
+      "output":{"shape":"GetLayerVersionResponse"},
+      "errors":[
+        {"shape":"ServiceException"},
+        {"shape":"InvalidParameterValueException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"ResourceNotFoundException"}
+      ],
+      "documentation":"<p>Returns information about a version of a function layer, with a link to download the layer archive that's valid for 10 minutes.</p>"
+    },
+    "GetLayerVersionPolicy":{
+      "name":"GetLayerVersionPolicy",
+      "http":{
+        "method":"GET",
+        "requestUri":"/2018-10-31/layers/{LayerName}/versions/{VersionNumber}/policy",
+        "responseCode":200
+      },
+      "input":{"shape":"GetLayerVersionPolicyRequest"},
+      "output":{"shape":"GetLayerVersionPolicyResponse"},
+      "errors":[
+        {"shape":"ServiceException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"InvalidParameterValueException"}
+      ],
+      "documentation":"<p>Returns the permission policy for a layer version. For more information, see <a>AddLayerVersionPermission</a>.</p>"
     },
     "GetPolicy":{
       "name":"GetPolicy",
@@ -333,7 +401,7 @@
         {"shape":"InvalidParameterValueException"},
         {"shape":"TooManyRequestsException"}
       ],
-      "documentation":"<p>Returns a list of event source mappings you created using the <code>CreateEventSourceMapping</code> (see <a>CreateEventSourceMapping</a>). </p> <p>For each mapping, the API returns configuration information. You can optionally specify filters to retrieve specific event source mappings.</p> <p>This operation requires permission for the <code>lambda:ListEventSourceMappings</code> action.</p>"
+      "documentation":"<p>Lists event source mappings. Specify an <code>EventSourceArn</code> to only show event source mappings for a single event source.</p>"
     },
     "ListFunctions":{
       "name":"ListFunctions",
@@ -350,6 +418,39 @@
         {"shape":"InvalidParameterValueException"}
       ],
       "documentation":"<p>Returns a list of your Lambda functions. For each function, the response includes the function configuration information. You must use <a>GetFunction</a> to retrieve the code for your function.</p> <p>This operation requires permission for the <code>lambda:ListFunctions</code> action.</p> <p>If you are using the versioning feature, you can list all of your functions or only <code>$LATEST</code> versions. For information about the versioning feature, see <a href=\"http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html\">AWS Lambda Function Versioning and Aliases</a>. </p>"
+    },
+    "ListLayerVersions":{
+      "name":"ListLayerVersions",
+      "http":{
+        "method":"GET",
+        "requestUri":"/2018-10-31/layers/{LayerName}/versions",
+        "responseCode":200
+      },
+      "input":{"shape":"ListLayerVersionsRequest"},
+      "output":{"shape":"ListLayerVersionsResponse"},
+      "errors":[
+        {"shape":"ServiceException"},
+        {"shape":"InvalidParameterValueException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"TooManyRequestsException"}
+      ],
+      "documentation":"<p>Lists the versions of a function layer. Versions that have been deleted aren't listed. Specify a <a href=\"http://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html\">runtime identifier</a> to list only versions that indicate that they're compatible with that runtime.</p>"
+    },
+    "ListLayers":{
+      "name":"ListLayers",
+      "http":{
+        "method":"GET",
+        "requestUri":"/2018-10-31/layers",
+        "responseCode":200
+      },
+      "input":{"shape":"ListLayersRequest"},
+      "output":{"shape":"ListLayersResponse"},
+      "errors":[
+        {"shape":"ServiceException"},
+        {"shape":"InvalidParameterValueException"},
+        {"shape":"TooManyRequestsException"}
+      ],
+      "documentation":"<p>Lists function layers and shows information about the latest version of each. Specify a <a href=\"http://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html\">runtime identifier</a> to list only layers that indicate that they're compatible with that runtime.</p>"
     },
     "ListTags":{
       "name":"ListTags",
@@ -383,6 +484,24 @@
         {"shape":"TooManyRequestsException"}
       ],
       "documentation":"<p>Lists all versions of a function. For information about versioning, see <a href=\"http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html\">AWS Lambda Function Versioning and Aliases</a>. </p>"
+    },
+    "PublishLayerVersion":{
+      "name":"PublishLayerVersion",
+      "http":{
+        "method":"POST",
+        "requestUri":"/2018-10-31/layers/{LayerName}/versions",
+        "responseCode":201
+      },
+      "input":{"shape":"PublishLayerVersionRequest"},
+      "output":{"shape":"PublishLayerVersionResponse"},
+      "errors":[
+        {"shape":"ServiceException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"InvalidParameterValueException"},
+        {"shape":"CodeStorageExceededException"}
+      ],
+      "documentation":"<p>Creates a function layer from a ZIP archive. Each time you call <code>PublishLayerVersion</code> with the same version name, a new version is created.</p> <p>Add layers to your function with <a>CreateFunction</a> or <a>UpdateFunctionConfiguration</a>.</p>"
     },
     "PublishVersion":{
       "name":"PublishVersion",
@@ -419,6 +538,23 @@
         {"shape":"TooManyRequestsException"}
       ],
       "documentation":"<p>Sets a limit on the number of concurrent executions available to this function. It is a subset of your account's total concurrent execution limit per region. Note that Lambda automatically reserves a buffer of 100 concurrent executions for functions without any reserved concurrency limit. This means if your account limit is 1000, you have a total of 900 available to allocate to individual functions. For more information, see <a href=\"http://docs.aws.amazon.com/lambda/latest/dg/concurrent-executions.html\">Managing Concurrency</a>.</p>"
+    },
+    "RemoveLayerVersionPermission":{
+      "name":"RemoveLayerVersionPermission",
+      "http":{
+        "method":"DELETE",
+        "requestUri":"/2018-10-31/layers/{LayerName}/versions/{VersionNumber}/policy/{StatementId}",
+        "responseCode":204
+      },
+      "input":{"shape":"RemoveLayerVersionPermissionRequest"},
+      "errors":[
+        {"shape":"ServiceException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InvalidParameterValueException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"PreconditionFailedException"}
+      ],
+      "documentation":"<p>Removes a statement from the permissions policy for a layer version. For more information, see <a>AddLayerVersionPermission</a>.</p>"
     },
     "RemovePermission":{
       "name":"RemovePermission",
@@ -504,7 +640,7 @@
         {"shape":"ResourceConflictException"},
         {"shape":"ResourceInUseException"}
       ],
-      "documentation":"<p>You can update an event source mapping. This is useful if you want to change the parameters of the existing mapping without losing your position in the stream. You can change which function will receive the stream records, but to change the stream itself, you must create a new mapping.</p> <p>If you disable the event source mapping, AWS Lambda stops polling. If you enable again, it will resume polling from the time it had stopped polling, so you don't lose processing of any records. However, if you delete event source mapping and create it again, it will reset.</p> <p>This operation requires permission for the <code>lambda:UpdateEventSourceMapping</code> action.</p>"
+      "documentation":"<p>Updates an event source mapping. You can change the function that AWS Lambda invokes, or pause invocation and resume later from the same location.</p>"
     },
     "UpdateFunctionCode":{
       "name":"UpdateFunctionCode",
@@ -590,6 +726,65 @@
       "type":"string",
       "pattern":"(lambda:[*]|lambda:[a-zA-Z]+|[*])"
     },
+    "AddLayerVersionPermissionRequest":{
+      "type":"structure",
+      "required":[
+        "LayerName",
+        "VersionNumber",
+        "StatementId",
+        "Action",
+        "Principal"
+      ],
+      "members":{
+        "LayerName":{
+          "shape":"LayerName",
+          "documentation":"<p>The name of the layer.</p>",
+          "location":"uri",
+          "locationName":"LayerName"
+        },
+        "VersionNumber":{
+          "shape":"LayerVersionNumber",
+          "documentation":"<p>The version number.</p>",
+          "location":"uri",
+          "locationName":"VersionNumber"
+        },
+        "StatementId":{
+          "shape":"StatementId",
+          "documentation":"<p>An identifier that distinguishes the policy from others on the same layer version.</p>"
+        },
+        "Action":{
+          "shape":"LayerPermissionAllowedAction",
+          "documentation":"<p>The API action that grants access to the layer. For example, <code>lambda:GetLayerVersion</code>.</p>"
+        },
+        "Principal":{
+          "shape":"LayerPermissionAllowedPrincipal",
+          "documentation":"<p>An account ID, or <code>*</code> to grant permission to all AWS accounts.</p>"
+        },
+        "OrganizationId":{
+          "shape":"OrganizationId",
+          "documentation":"<p>With the principal set to <code>*</code>, grant permission to all accounts in the specified organization.</p>"
+        },
+        "RevisionId":{
+          "shape":"String",
+          "documentation":"<p>Only update the policy if the revision ID matches the ID specified. Use this option to avoid modifying a policy that has changed since you last read it.</p>",
+          "location":"querystring",
+          "locationName":"RevisionId"
+        }
+      }
+    },
+    "AddLayerVersionPermissionResponse":{
+      "type":"structure",
+      "members":{
+        "Statement":{
+          "shape":"String",
+          "documentation":"<p>The permission statement.</p>"
+        },
+        "RevisionId":{
+          "shape":"String",
+          "documentation":"<p>A unique identifier for the current revision of the policy.</p>"
+        }
+      }
+    },
     "AddPermissionRequest":{
       "type":"structure",
       "required":[
@@ -601,7 +796,7 @@
       "members":{
         "FunctionName":{
           "shape":"FunctionName",
-          "documentation":"<p>The name of the lambda function.</p> <p class=\"title\"> <b>Name formats</b> </p> <ul> <li> <p> <b>Function name</b> - <code>MyFunction</code>.</p> </li> <li> <p> <b>Function ARN</b> - <code>arn:aws:lambda:us-west-2:123456789012:function:MyFunction</code>.</p> </li> <li> <p> <b>Partial ARN</b> - <code>123456789012:function:MyFunction</code>.</p> </li> </ul> <p>The length constraint applies only to the full ARN. If you specify only the function name, it is limited to 64 characters in length.</p>",
+          "documentation":"<p>The name of the Lambda function.</p> <p class=\"title\"> <b>Name formats</b> </p> <ul> <li> <p> <b>Function name</b> - <code>MyFunction</code>.</p> </li> <li> <p> <b>Function ARN</b> - <code>arn:aws:lambda:us-west-2:123456789012:function:MyFunction</code>.</p> </li> <li> <p> <b>Partial ARN</b> - <code>123456789012:function:MyFunction</code>.</p> </li> </ul> <p>The length constraint applies only to the full ARN. If you specify only the function name, it is limited to 64 characters in length.</p>",
           "location":"uri",
           "locationName":"FunctionName"
         },
@@ -742,6 +937,11 @@
       "error":{"httpStatusCode":400},
       "exception":true
     },
+    "CompatibleRuntimes":{
+      "type":"list",
+      "member":{"shape":"Runtime"},
+      "max":5
+    },
     "Concurrency":{
       "type":"structure",
       "members":{
@@ -792,27 +992,27 @@
       "members":{
         "EventSourceArn":{
           "shape":"Arn",
-          "documentation":"<p>The Amazon Resource Name (ARN) of the event source.</p>"
+          "documentation":"<p>The Amazon Resource Name (ARN) of the event source.</p> <ul> <li> <p> <b>Amazon Kinesis</b> - The ARN of the data stream or a stream consumer.</p> </li> <li> <p> <b>Amazon DynamoDB Streams</b> - The ARN of the stream.</p> </li> <li> <p> <b>Amazon Simple Queue Service</b> - The ARN of the queue.</p> </li> </ul>"
         },
         "FunctionName":{
           "shape":"FunctionName",
-          "documentation":"<p>The name of the lambda function.</p> <p class=\"title\"> <b>Name formats</b> </p> <ul> <li> <p> <b>Function name</b> - <code>MyFunction</code>.</p> </li> <li> <p> <b>Function ARN</b> - <code>arn:aws:lambda:us-west-2:123456789012:function:MyFunction</code>.</p> </li> <li> <p> <b>Version or Alias ARN</b> - <code>arn:aws:lambda:us-west-2:123456789012:function:MyFunction:PROD</code>.</p> </li> <li> <p> <b>Partial ARN</b> - <code>123456789012:function:MyFunction</code>.</p> </li> </ul> <p>The length constraint applies only to the full ARN. If you specify only the function name, it is limited to 64 characters in length.</p>"
+          "documentation":"<p>The name of the Lambda function.</p> <p class=\"title\"> <b>Name formats</b> </p> <ul> <li> <p> <b>Function name</b> - <code>MyFunction</code>.</p> </li> <li> <p> <b>Function ARN</b> - <code>arn:aws:lambda:us-west-2:123456789012:function:MyFunction</code>.</p> </li> <li> <p> <b>Version or Alias ARN</b> - <code>arn:aws:lambda:us-west-2:123456789012:function:MyFunction:PROD</code>.</p> </li> <li> <p> <b>Partial ARN</b> - <code>123456789012:function:MyFunction</code>.</p> </li> </ul> <p>The length constraint applies only to the full ARN. If you specify only the function name, it's limited to 64 characters in length.</p>"
         },
         "Enabled":{
           "shape":"Enabled",
-          "documentation":"<p>Set to false to disable the event source upon creation. </p>"
+          "documentation":"<p>Disables the event source mapping to pause polling and invocation.</p>"
         },
         "BatchSize":{
           "shape":"BatchSize",
-          "documentation":"<p>The largest number of records that AWS Lambda will retrieve from your event source at the time of invoking your function. Your function receives an event with all the retrieved records. The default for Amazon Kinesis and Amazon DynamoDB is 100 records. Both the default and maximum for Amazon SQS are 10 messages.</p>"
+          "documentation":"<p>The maximum number of items to retrieve in a single batch.</p> <ul> <li> <p> <b>Amazon Kinesis</b> - Default 100. Max 10,000.</p> </li> <li> <p> <b>Amazon DynamoDB Streams</b> - Default 100. Max 1,000.</p> </li> <li> <p> <b>Amazon Simple Queue Service</b> - Default 10. Max 10.</p> </li> </ul>"
         },
         "StartingPosition":{
           "shape":"EventSourcePosition",
-          "documentation":"<p>The position in the DynamoDB or Kinesis stream where AWS Lambda should start reading. For more information, see <a href=\"http://docs.aws.amazon.com/kinesis/latest/APIReference/API_GetShardIterator.html#Kinesis-GetShardIterator-request-ShardIteratorType\">GetShardIterator</a> in the <i>Amazon Kinesis API Reference Guide</i> or <a href=\"http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_streams_GetShardIterator.html\">GetShardIterator</a> in the <i>Amazon DynamoDB API Reference Guide</i>. The <code>AT_TIMESTAMP</code> value is supported only for <a href=\"http://docs.aws.amazon.com/streams/latest/dev/amazon-kinesis-streams.html\">Kinesis streams</a>. </p>"
+          "documentation":"<p>The position in a stream from which to start reading. Required for Amazon Kinesis and Amazon DynamoDB Streams sources. <code>AT_TIMESTAMP</code> is only supported for Amazon Kinesis streams.</p>"
         },
         "StartingPositionTimestamp":{
           "shape":"Date",
-          "documentation":"<p>The timestamp of the data record from which to start reading. Used with <a href=\"http://docs.aws.amazon.com/kinesis/latest/APIReference/API_GetShardIterator.html#Kinesis-GetShardIterator-request-ShardIteratorType\">shard iterator type</a> AT_TIMESTAMP. If a record with this exact timestamp does not exist, the iterator returned is for the next (later) record. If the timestamp is older than the current trim horizon, the iterator returned is for the oldest untrimmed data record (TRIM_HORIZON). Valid only for <a href=\"http://docs.aws.amazon.com/streams/latest/dev/amazon-kinesis-streams.html\">Kinesis streams</a>. </p>"
+          "documentation":"<p>With <code>StartingPosition</code> set to <code>AT_TIMESTAMP</code>, the Unix time in seconds from which to start reading.</p>"
         }
       }
     },
@@ -828,7 +1028,7 @@
       "members":{
         "FunctionName":{
           "shape":"FunctionName",
-          "documentation":"<p>The name of the lambda function.</p> <p class=\"title\"> <b>Name formats</b> </p> <ul> <li> <p> <b>Function name</b> - <code>MyFunction</code>.</p> </li> <li> <p> <b>Function ARN</b> - <code>arn:aws:lambda:us-west-2:123456789012:function:MyFunction</code>.</p> </li> <li> <p> <b>Partial ARN</b> - <code>123456789012:function:MyFunction</code>.</p> </li> </ul> <p>The length constraint applies only to the full ARN. If you specify only the function name, it is limited to 64 characters in length.</p>"
+          "documentation":"<p>The name of the Lambda function.</p> <p class=\"title\"> <b>Name formats</b> </p> <ul> <li> <p> <b>Function name</b> - <code>MyFunction</code>.</p> </li> <li> <p> <b>Function ARN</b> - <code>arn:aws:lambda:us-west-2:123456789012:function:MyFunction</code>.</p> </li> <li> <p> <b>Partial ARN</b> - <code>123456789012:function:MyFunction</code>.</p> </li> </ul> <p>The length constraint applies only to the full ARN. If you specify only the function name, it is limited to 64 characters in length.</p>"
         },
         "Runtime":{
           "shape":"Runtime",
@@ -885,6 +1085,10 @@
         "Tags":{
           "shape":"Tags",
           "documentation":"<p>The list of tags (key-value pairs) assigned to the new function. For more information, see <a href=\"http://docs.aws.amazon.com/lambda/latest/dg/tagging.html\">Tagging Lambda Functions</a> in the <b>AWS Lambda Developer Guide</b>.</p>"
+        },
+        "Layers":{
+          "shape":"LayerList",
+          "documentation":"<p>A list of <a href=\"http://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html\">function layers</a> to add to the function's execution environment.</p>"
         }
       }
     },
@@ -926,7 +1130,7 @@
       "members":{
         "UUID":{
           "shape":"String",
-          "documentation":"<p>The event source mapping ID.</p>",
+          "documentation":"<p>The identifier of the event source mapping.</p>",
           "location":"uri",
           "locationName":"UUID"
         }
@@ -938,7 +1142,7 @@
       "members":{
         "FunctionName":{
           "shape":"FunctionName",
-          "documentation":"<p>The name of the lambda function.</p> <p class=\"title\"> <b>Name formats</b> </p> <ul> <li> <p> <b>Function name</b> - <code>MyFunction</code>.</p> </li> <li> <p> <b>Function ARN</b> - <code>arn:aws:lambda:us-west-2:123456789012:function:MyFunction</code>.</p> </li> <li> <p> <b>Partial ARN</b> - <code>123456789012:function:MyFunction</code>.</p> </li> </ul> <p>The length constraint applies only to the full ARN. If you specify only the function name, it is limited to 64 characters in length.</p>",
+          "documentation":"<p>The name of the Lambda function.</p> <p class=\"title\"> <b>Name formats</b> </p> <ul> <li> <p> <b>Function name</b> - <code>MyFunction</code>.</p> </li> <li> <p> <b>Function ARN</b> - <code>arn:aws:lambda:us-west-2:123456789012:function:MyFunction</code>.</p> </li> <li> <p> <b>Partial ARN</b> - <code>123456789012:function:MyFunction</code>.</p> </li> </ul> <p>The length constraint applies only to the full ARN. If you specify only the function name, it is limited to 64 characters in length.</p>",
           "location":"uri",
           "locationName":"FunctionName"
         }
@@ -950,7 +1154,7 @@
       "members":{
         "FunctionName":{
           "shape":"FunctionName",
-          "documentation":"<p>The name of the lambda function.</p> <p class=\"title\"> <b>Name formats</b> </p> <ul> <li> <p> <b>Function name</b> - <code>MyFunction</code>.</p> </li> <li> <p> <b>Function ARN</b> - <code>arn:aws:lambda:us-west-2:123456789012:function:MyFunction</code>.</p> </li> <li> <p> <b>Partial ARN</b> - <code>123456789012:function:MyFunction</code>.</p> </li> </ul> <p>The length constraint applies only to the full ARN. If you specify only the function name, it is limited to 64 characters in length.</p>",
+          "documentation":"<p>The name of the Lambda function.</p> <p class=\"title\"> <b>Name formats</b> </p> <ul> <li> <p> <b>Function name</b> - <code>MyFunction</code>.</p> </li> <li> <p> <b>Function ARN</b> - <code>arn:aws:lambda:us-west-2:123456789012:function:MyFunction</code>.</p> </li> <li> <p> <b>Partial ARN</b> - <code>123456789012:function:MyFunction</code>.</p> </li> </ul> <p>The length constraint applies only to the full ARN. If you specify only the function name, it is limited to 64 characters in length.</p>",
           "location":"uri",
           "locationName":"FunctionName"
         },
@@ -959,6 +1163,27 @@
           "documentation":"<p>Specify a version to delete. You cannot delete a version that is referenced by an alias.</p>",
           "location":"querystring",
           "locationName":"Qualifier"
+        }
+      }
+    },
+    "DeleteLayerVersionRequest":{
+      "type":"structure",
+      "required":[
+        "LayerName",
+        "VersionNumber"
+      ],
+      "members":{
+        "LayerName":{
+          "shape":"LayerName",
+          "documentation":"<p>The name of the layer.</p>",
+          "location":"uri",
+          "locationName":"LayerName"
+        },
+        "VersionNumber":{
+          "shape":"LayerVersionNumber",
+          "documentation":"<p>The version number.</p>",
+          "location":"uri",
+          "locationName":"VersionNumber"
         }
       }
     },
@@ -1067,38 +1292,38 @@
       "members":{
         "UUID":{
           "shape":"String",
-          "documentation":"<p>The AWS Lambda assigned opaque identifier for the mapping.</p>"
+          "documentation":"<p>The identifier of the event source mapping.</p>"
         },
         "BatchSize":{
           "shape":"BatchSize",
-          "documentation":"<p>The largest number of records that AWS Lambda will retrieve from your event source at the time of invoking your function. Your function receives an event with all the retrieved records.</p>"
+          "documentation":"<p>The maximum number of items to retrieve in a single batch.</p>"
         },
         "EventSourceArn":{
           "shape":"Arn",
-          "documentation":"<p>The Amazon Resource Name (ARN) of the Amazon Kinesis or DynamoDB stream that is the source of events.</p>"
+          "documentation":"<p>The Amazon Resource Name (ARN) of the event source.</p>"
         },
         "FunctionArn":{
           "shape":"FunctionArn",
-          "documentation":"<p>The Lambda function to invoke when AWS Lambda detects an event on the poll-based source.</p>"
+          "documentation":"<p>The ARN of the Lambda function.</p>"
         },
         "LastModified":{
           "shape":"Date",
-          "documentation":"<p>The UTC time string indicating the last time the event mapping was updated.</p>"
+          "documentation":"<p>The date that the event source mapping was last updated, in Unix time seconds.</p>"
         },
         "LastProcessingResult":{
           "shape":"String",
-          "documentation":"<p>The result of the last AWS Lambda invocation of your Lambda function. This value will be null if an SQS queue is the event source.</p>"
+          "documentation":"<p>The result of the last AWS Lambda invocation of your Lambda function.</p>"
         },
         "State":{
           "shape":"String",
-          "documentation":"<p>The state of the event source mapping. It can be <code>Creating</code>, <code>Enabled</code>, <code>Disabled</code>, <code>Enabling</code>, <code>Disabling</code>, <code>Updating</code>, or <code>Deleting</code>.</p>"
+          "documentation":"<p>The state of the event source mapping. It can be one of the following: <code>Creating</code>, <code>Enabling</code>, <code>Enabled</code>, <code>Disabling</code>, <code>Disabled</code>, <code>Updating</code>, or <code>Deleting</code>.</p>"
         },
         "StateTransitionReason":{
           "shape":"String",
-          "documentation":"<p>The reason the event source mapping is in its current state. It is either user-requested or an AWS Lambda-initiated state transition.</p>"
+          "documentation":"<p>The cause of the last state change, either <code>User initiated</code> or <code>Lambda initiated</code>.</p>"
         }
       },
-      "documentation":"<p>Describes mapping between an Amazon Kinesis or DynamoDB stream and a Lambda function.</p>"
+      "documentation":"<p>A mapping between an AWS resource and an AWS Lambda function. See <a>CreateEventSourceMapping</a> for details.</p>"
     },
     "EventSourceMappingsList":{
       "type":"list",
@@ -1199,7 +1424,7 @@
         },
         "LastModified":{
           "shape":"Timestamp",
-          "documentation":"<p>The date and time that the function was last updated, in <a href=\"https://www.w3.org/TR/NOTE-datetime\">ISO-8601 format</a> (YYYY-MM-DDThh:mm:ssTZD).</p>"
+          "documentation":"<p>The date and time that the function was last updated, in <a href=\"https://www.w3.org/TR/NOTE-datetime\">ISO-8601 format</a> (YYYY-MM-DDThh:mm:ss.sTZD).</p>"
         },
         "CodeSha256":{
           "shape":"String",
@@ -1236,6 +1461,10 @@
         "RevisionId":{
           "shape":"String",
           "documentation":"<p>Represents the latest updated revision of the function or alias.</p>"
+        },
+        "Layers":{
+          "shape":"LayersReferenceList",
+          "documentation":"<p>A list of <a href=\"http://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html\">function layers</a>.</p>"
         }
       },
       "documentation":"<p>A Lambda function's configuration settings.</p>"
@@ -1299,7 +1528,7 @@
       "members":{
         "UUID":{
           "shape":"String",
-          "documentation":"<p>The AWS Lambda assigned ID of the event source mapping.</p>",
+          "documentation":"<p>The identifier of the event source mapping.</p>",
           "location":"uri",
           "locationName":"UUID"
         }
@@ -1311,7 +1540,7 @@
       "members":{
         "FunctionName":{
           "shape":"NamespacedFunctionName",
-          "documentation":"<p>The name of the lambda function.</p> <p class=\"title\"> <b>Name formats</b> </p> <ul> <li> <p> <b>Function name</b> - <code>MyFunction</code>.</p> </li> <li> <p> <b>Function ARN</b> - <code>arn:aws:lambda:us-west-2:123456789012:function:MyFunction</code>.</p> </li> <li> <p> <b>Partial ARN</b> - <code>123456789012:function:MyFunction</code>.</p> </li> </ul> <p>The length constraint applies only to the full ARN. If you specify only the function name, it is limited to 64 characters in length.</p>",
+          "documentation":"<p>The name of the Lambda function.</p> <p class=\"title\"> <b>Name formats</b> </p> <ul> <li> <p> <b>Function name</b> - <code>MyFunction</code>.</p> </li> <li> <p> <b>Function ARN</b> - <code>arn:aws:lambda:us-west-2:123456789012:function:MyFunction</code>.</p> </li> <li> <p> <b>Partial ARN</b> - <code>123456789012:function:MyFunction</code>.</p> </li> </ul> <p>The length constraint applies only to the full ARN. If you specify only the function name, it is limited to 64 characters in length.</p>",
           "location":"uri",
           "locationName":"FunctionName"
         },
@@ -1329,7 +1558,7 @@
       "members":{
         "FunctionName":{
           "shape":"NamespacedFunctionName",
-          "documentation":"<p>The name of the lambda function.</p> <p class=\"title\"> <b>Name formats</b> </p> <ul> <li> <p> <b>Function name</b> - <code>MyFunction</code>.</p> </li> <li> <p> <b>Function ARN</b> - <code>arn:aws:lambda:us-west-2:123456789012:function:MyFunction</code>.</p> </li> <li> <p> <b>Partial ARN</b> - <code>123456789012:function:MyFunction</code>.</p> </li> </ul> <p>The length constraint applies only to the full ARN. If you specify only the function name, it is limited to 64 characters in length.</p>",
+          "documentation":"<p>The name of the Lambda function.</p> <p class=\"title\"> <b>Name formats</b> </p> <ul> <li> <p> <b>Function name</b> - <code>MyFunction</code>.</p> </li> <li> <p> <b>Function ARN</b> - <code>arn:aws:lambda:us-west-2:123456789012:function:MyFunction</code>.</p> </li> <li> <p> <b>Partial ARN</b> - <code>123456789012:function:MyFunction</code>.</p> </li> </ul> <p>The length constraint applies only to the full ARN. If you specify only the function name, it is limited to 64 characters in length.</p>",
           "location":"uri",
           "locationName":"FunctionName"
         },
@@ -1362,6 +1591,98 @@
         }
       },
       "documentation":"<p>This response contains the object for the Lambda function location (see <a>FunctionCodeLocation</a>.</p>"
+    },
+    "GetLayerVersionPolicyRequest":{
+      "type":"structure",
+      "required":[
+        "LayerName",
+        "VersionNumber"
+      ],
+      "members":{
+        "LayerName":{
+          "shape":"LayerName",
+          "documentation":"<p>The name of the layer.</p>",
+          "location":"uri",
+          "locationName":"LayerName"
+        },
+        "VersionNumber":{
+          "shape":"LayerVersionNumber",
+          "documentation":"<p>The version number.</p>",
+          "location":"uri",
+          "locationName":"VersionNumber"
+        }
+      }
+    },
+    "GetLayerVersionPolicyResponse":{
+      "type":"structure",
+      "members":{
+        "Policy":{
+          "shape":"String",
+          "documentation":"<p>The policy document.</p>"
+        },
+        "RevisionId":{
+          "shape":"String",
+          "documentation":"<p>A unique identifier for the current revision of the policy.</p>"
+        }
+      }
+    },
+    "GetLayerVersionRequest":{
+      "type":"structure",
+      "required":[
+        "LayerName",
+        "VersionNumber"
+      ],
+      "members":{
+        "LayerName":{
+          "shape":"LayerName",
+          "documentation":"<p>The name of the layer.</p>",
+          "location":"uri",
+          "locationName":"LayerName"
+        },
+        "VersionNumber":{
+          "shape":"LayerVersionNumber",
+          "documentation":"<p>The version number.</p>",
+          "location":"uri",
+          "locationName":"VersionNumber"
+        }
+      }
+    },
+    "GetLayerVersionResponse":{
+      "type":"structure",
+      "members":{
+        "Content":{
+          "shape":"LayerVersionContentOutput",
+          "documentation":"<p>Details about the layer version.</p>"
+        },
+        "LayerArn":{
+          "shape":"LayerArn",
+          "documentation":"<p>The Amazon Resource Name (ARN) of the function layer.</p>"
+        },
+        "LayerVersionArn":{
+          "shape":"LayerVersionArn",
+          "documentation":"<p>The ARN of the layer version.</p>"
+        },
+        "Description":{
+          "shape":"Description",
+          "documentation":"<p>The description of the version.</p>"
+        },
+        "CreatedDate":{
+          "shape":"Timestamp",
+          "documentation":"<p>The date that the layer version was created, in <a href=\"https://www.w3.org/TR/NOTE-datetime\">ISO-8601 format</a> (YYYY-MM-DDThh:mm:ss.sTZD).</p>"
+        },
+        "Version":{
+          "shape":"LayerVersionNumber",
+          "documentation":"<p>The version number.</p>"
+        },
+        "CompatibleRuntimes":{
+          "shape":"CompatibleRuntimes",
+          "documentation":"<p>The layer's compatible runtimes.</p>"
+        },
+        "LicenseInfo":{
+          "shape":"LicenseInfo",
+          "documentation":"<p>The layer's software license.</p>"
+        }
+      }
     },
     "GetPolicyRequest":{
       "type":"structure",
@@ -1479,7 +1800,7 @@
       "members":{
         "FunctionName":{
           "shape":"NamespacedFunctionName",
-          "documentation":"<p>The name of the lambda function.</p> <p class=\"title\"> <b>Name formats</b> </p> <ul> <li> <p> <b>Function name</b> - <code>MyFunction</code>.</p> </li> <li> <p> <b>Function ARN</b> - <code>arn:aws:lambda:us-west-2:123456789012:function:MyFunction</code>.</p> </li> <li> <p> <b>Partial ARN</b> - <code>123456789012:function:MyFunction</code>.</p> </li> </ul> <p>The length constraint applies only to the full ARN. If you specify only the function name, it is limited to 64 characters in length.</p>",
+          "documentation":"<p>The name of the Lambda function.</p> <p class=\"title\"> <b>Name formats</b> </p> <ul> <li> <p> <b>Function name</b> - <code>MyFunction</code>.</p> </li> <li> <p> <b>Function ARN</b> - <code>arn:aws:lambda:us-west-2:123456789012:function:MyFunction</code>.</p> </li> <li> <p> <b>Partial ARN</b> - <code>123456789012:function:MyFunction</code>.</p> </li> </ul> <p>The length constraint applies only to the full ARN. If you specify only the function name, it is limited to 64 characters in length.</p>",
           "location":"uri",
           "locationName":"FunctionName"
         },
@@ -1565,7 +1886,7 @@
       "members":{
         "FunctionName":{
           "shape":"NamespacedFunctionName",
-          "documentation":"<p>The name of the lambda function.</p> <p class=\"title\"> <b>Name formats</b> </p> <ul> <li> <p> <b>Function name</b> - <code>MyFunction</code>.</p> </li> <li> <p> <b>Function ARN</b> - <code>arn:aws:lambda:us-west-2:123456789012:function:MyFunction</code>.</p> </li> <li> <p> <b>Partial ARN</b> - <code>123456789012:function:MyFunction</code>.</p> </li> </ul> <p>The length constraint applies only to the full ARN. If you specify only the function name, it is limited to 64 characters in length.</p>",
+          "documentation":"<p>The name of the Lambda function.</p> <p class=\"title\"> <b>Name formats</b> </p> <ul> <li> <p> <b>Function name</b> - <code>MyFunction</code>.</p> </li> <li> <p> <b>Function ARN</b> - <code>arn:aws:lambda:us-west-2:123456789012:function:MyFunction</code>.</p> </li> <li> <p> <b>Partial ARN</b> - <code>123456789012:function:MyFunction</code>.</p> </li> </ul> <p>The length constraint applies only to the full ARN. If you specify only the function name, it is limited to 64 characters in length.</p>",
           "location":"uri",
           "locationName":"FunctionName"
         },
@@ -1633,6 +1954,155 @@
       "error":{"httpStatusCode":502},
       "exception":true
     },
+    "Layer":{
+      "type":"structure",
+      "members":{
+        "Arn":{
+          "shape":"LayerVersionArn",
+          "documentation":"<p>The Amazon Resource Name (ARN) of the function layer.</p>"
+        },
+        "CodeSize":{
+          "shape":"Long",
+          "documentation":"<p>The size of the layer archive in bytes.</p>"
+        }
+      },
+      "documentation":"<p>A function layer.</p>"
+    },
+    "LayerArn":{
+      "type":"string",
+      "max":140,
+      "min":1,
+      "pattern":"arn:[a-zA-Z0-9-]+:lambda:[a-zA-Z0-9-]+:\\d{12}:layer:[a-zA-Z0-9-_]+"
+    },
+    "LayerList":{
+      "type":"list",
+      "member":{"shape":"LayerVersionArn"}
+    },
+    "LayerName":{
+      "type":"string",
+      "max":140,
+      "min":1,
+      "pattern":"(arn:[a-zA-Z0-9-]+:lambda:[a-zA-Z0-9-]+:\\d{12}:layer:[a-zA-Z0-9-_]+)|[a-zA-Z0-9-_]+"
+    },
+    "LayerPermissionAllowedAction":{
+      "type":"string",
+      "pattern":"lambda:GetLayerVersion"
+    },
+    "LayerPermissionAllowedPrincipal":{
+      "type":"string",
+      "pattern":"\\d{12}|\\*|arn:(aws[a-zA-Z-]*):iam::\\d{12}:root"
+    },
+    "LayerVersionArn":{
+      "type":"string",
+      "max":140,
+      "min":1,
+      "pattern":"arn:[a-zA-Z0-9-]+:lambda:[a-zA-Z0-9-]+:\\d{12}:layer:[a-zA-Z0-9-_]+:[0-9]+"
+    },
+    "LayerVersionContentInput":{
+      "type":"structure",
+      "members":{
+        "S3Bucket":{
+          "shape":"S3Bucket",
+          "documentation":"<p>The Amazon S3 bucket of the layer archive.</p>"
+        },
+        "S3Key":{
+          "shape":"S3Key",
+          "documentation":"<p>The Amazon S3 key of the layer archive.</p>"
+        },
+        "S3ObjectVersion":{
+          "shape":"S3ObjectVersion",
+          "documentation":"<p>For versioned objects, the version of the layer archive object to use.</p>"
+        },
+        "ZipFile":{
+          "shape":"Blob",
+          "documentation":"<p>The base64-encoded contents of the layer archive. AWS SDK and AWS CLI clients handle the encoding for you.</p>"
+        }
+      },
+      "documentation":"<p>A ZIP archive that contains the contents of the function layer. You can specify either an Amazon S3 location, or upload a layer archive directly.</p>"
+    },
+    "LayerVersionContentOutput":{
+      "type":"structure",
+      "members":{
+        "Location":{
+          "shape":"String",
+          "documentation":"<p>A link to the layer archive in Amazon S3 that is valid for 10 minutes.</p>"
+        },
+        "CodeSha256":{
+          "shape":"String",
+          "documentation":"<p>The SHA-256 hash of the layer archive.</p>"
+        },
+        "CodeSize":{
+          "shape":"Long",
+          "documentation":"<p>The size of the layer archive in bytes.</p>"
+        }
+      },
+      "documentation":"<p>Details about a layer version.</p>"
+    },
+    "LayerVersionNumber":{"type":"long"},
+    "LayerVersionsList":{
+      "type":"list",
+      "member":{"shape":"LayerVersionsListItem"}
+    },
+    "LayerVersionsListItem":{
+      "type":"structure",
+      "members":{
+        "LayerVersionArn":{
+          "shape":"LayerVersionArn",
+          "documentation":"<p>The ARN of the layer version.</p>"
+        },
+        "Version":{
+          "shape":"LayerVersionNumber",
+          "documentation":"<p>The version number.</p>"
+        },
+        "Description":{
+          "shape":"Description",
+          "documentation":"<p>The description of the version.</p>"
+        },
+        "CreatedDate":{
+          "shape":"Timestamp",
+          "documentation":"<p>The date that the version was created, in ISO 8601 format. For example, <code>2018-11-27T15:10:45.123+0000</code>.</p>"
+        },
+        "CompatibleRuntimes":{
+          "shape":"CompatibleRuntimes",
+          "documentation":"<p>The layer's compatible runtimes.</p>"
+        },
+        "LicenseInfo":{
+          "shape":"LicenseInfo",
+          "documentation":"<p>The layer's open-source license.</p>"
+        }
+      },
+      "documentation":"<p>Details about a layer version.</p>"
+    },
+    "LayersList":{
+      "type":"list",
+      "member":{"shape":"LayersListItem"}
+    },
+    "LayersListItem":{
+      "type":"structure",
+      "members":{
+        "LayerName":{
+          "shape":"LayerName",
+          "documentation":"<p>The name of the layer.</p>"
+        },
+        "LayerArn":{
+          "shape":"LayerArn",
+          "documentation":"<p>The Amazon Resource Name (ARN) of the function layer.</p>"
+        },
+        "LatestMatchingVersion":{
+          "shape":"LayerVersionsListItem",
+          "documentation":"<p>The newest version of the layer.</p>"
+        }
+      },
+      "documentation":"<p>Details about a function layer.</p>"
+    },
+    "LayersReferenceList":{
+      "type":"list",
+      "member":{"shape":"Layer"}
+    },
+    "LicenseInfo":{
+      "type":"string",
+      "max":512
+    },
     "ListAliasesRequest":{
       "type":"structure",
       "required":["FunctionName"],
@@ -1681,25 +2151,25 @@
       "members":{
         "EventSourceArn":{
           "shape":"Arn",
-          "documentation":"<p>The Amazon Resource Name (ARN) of the Amazon Kinesis or DynamoDB stream. (This parameter is optional.)</p>",
+          "documentation":"<p>The Amazon Resource Name (ARN) of the event source.</p> <ul> <li> <p> <b>Amazon Kinesis</b> - The ARN of the data stream or a stream consumer.</p> </li> <li> <p> <b>Amazon DynamoDB Streams</b> - The ARN of the stream.</p> </li> <li> <p> <b>Amazon Simple Queue Service</b> - The ARN of the queue.</p> </li> </ul>",
           "location":"querystring",
           "locationName":"EventSourceArn"
         },
         "FunctionName":{
           "shape":"FunctionName",
-          "documentation":"<p>The name of the lambda function.</p> <p class=\"title\"> <b>Name formats</b> </p> <ul> <li> <p> <b>Function name</b> - <code>MyFunction</code>.</p> </li> <li> <p> <b>Function ARN</b> - <code>arn:aws:lambda:us-west-2:123456789012:function:MyFunction</code>.</p> </li> <li> <p> <b>Version or Alias ARN</b> - <code>arn:aws:lambda:us-west-2:123456789012:function:MyFunction:PROD</code>.</p> </li> <li> <p> <b>Partial ARN</b> - <code>123456789012:function:MyFunction</code>.</p> </li> </ul> <p>The length constraint applies only to the full ARN. If you specify only the function name, it is limited to 64 characters in length.</p>",
+          "documentation":"<p>The name of the Lambda function.</p> <p class=\"title\"> <b>Name formats</b> </p> <ul> <li> <p> <b>Function name</b> - <code>MyFunction</code>.</p> </li> <li> <p> <b>Function ARN</b> - <code>arn:aws:lambda:us-west-2:123456789012:function:MyFunction</code>.</p> </li> <li> <p> <b>Version or Alias ARN</b> - <code>arn:aws:lambda:us-west-2:123456789012:function:MyFunction:PROD</code>.</p> </li> <li> <p> <b>Partial ARN</b> - <code>123456789012:function:MyFunction</code>.</p> </li> </ul> <p>The length constraint applies only to the full ARN. If you specify only the function name, it's limited to 64 characters in length.</p>",
           "location":"querystring",
           "locationName":"FunctionName"
         },
         "Marker":{
           "shape":"String",
-          "documentation":"<p>Optional string. An opaque pagination token returned from a previous <code>ListEventSourceMappings</code> operation. If present, specifies to continue the list from where the returning call left off. </p>",
+          "documentation":"<p>A pagination token returned by a previous call.</p>",
           "location":"querystring",
           "locationName":"Marker"
         },
         "MaxItems":{
           "shape":"MaxListItems",
-          "documentation":"<p>Optional integer. Specifies the maximum number of event sources to return in response. This value must be greater than 0.</p>",
+          "documentation":"<p>The maximum number of event source mappings to return.</p>",
           "location":"querystring",
           "locationName":"MaxItems"
         }
@@ -1710,14 +2180,13 @@
       "members":{
         "NextMarker":{
           "shape":"String",
-          "documentation":"<p>A string, present if there are more event source mappings.</p>"
+          "documentation":"<p>A pagination token that's returned when the response doesn't contain all event source mappings.</p>"
         },
         "EventSourceMappings":{
           "shape":"EventSourceMappingsList",
-          "documentation":"<p>An array of <code>EventSourceMappingConfiguration</code> objects.</p>"
+          "documentation":"<p>A list of event source mappings.</p>"
         }
-      },
-      "documentation":"<p>Contains a list of event sources (see <a>EventSourceMappingConfiguration</a>)</p>"
+      }
     },
     "ListFunctionsRequest":{
       "type":"structure",
@@ -1761,6 +2230,85 @@
         }
       },
       "documentation":"<p>A list of Lambda functions.</p>"
+    },
+    "ListLayerVersionsRequest":{
+      "type":"structure",
+      "required":["LayerName"],
+      "members":{
+        "CompatibleRuntime":{
+          "shape":"Runtime",
+          "documentation":"<p>A runtime identifier. For example, <code>go1.x</code>.</p>",
+          "location":"querystring",
+          "locationName":"CompatibleRuntime"
+        },
+        "LayerName":{
+          "shape":"LayerName",
+          "documentation":"<p>The name of the layer.</p>",
+          "location":"uri",
+          "locationName":"LayerName"
+        },
+        "Marker":{
+          "shape":"String",
+          "documentation":"<p>A pagination token returned by a previous call.</p>",
+          "location":"querystring",
+          "locationName":"Marker"
+        },
+        "MaxItems":{
+          "shape":"MaxLayerListItems",
+          "documentation":"<p>The maximum number of versions to return.</p>",
+          "location":"querystring",
+          "locationName":"MaxItems"
+        }
+      }
+    },
+    "ListLayerVersionsResponse":{
+      "type":"structure",
+      "members":{
+        "NextMarker":{
+          "shape":"String",
+          "documentation":"<p>A pagination token returned when the response doesn't contain all versions.</p>"
+        },
+        "LayerVersions":{
+          "shape":"LayerVersionsList",
+          "documentation":"<p>A list of versions.</p>"
+        }
+      }
+    },
+    "ListLayersRequest":{
+      "type":"structure",
+      "members":{
+        "CompatibleRuntime":{
+          "shape":"Runtime",
+          "documentation":"<p>A runtime identifier. For example, <code>go1.x</code>.</p>",
+          "location":"querystring",
+          "locationName":"CompatibleRuntime"
+        },
+        "Marker":{
+          "shape":"String",
+          "documentation":"<p>A pagination token returned by a previous call.</p>",
+          "location":"querystring",
+          "locationName":"Marker"
+        },
+        "MaxItems":{
+          "shape":"MaxLayerListItems",
+          "documentation":"<p>The maximum number of layers to return.</p>",
+          "location":"querystring",
+          "locationName":"MaxItems"
+        }
+      }
+    },
+    "ListLayersResponse":{
+      "type":"structure",
+      "members":{
+        "NextMarker":{
+          "shape":"String",
+          "documentation":"<p>A pagination token returned when the response doesn't contain all layers.</p>"
+        },
+        "Layers":{
+          "shape":"LayersList",
+          "documentation":"<p>A list of function layers.</p>"
+        }
+      }
     },
     "ListTagsRequest":{
       "type":"structure",
@@ -1832,6 +2380,11 @@
       "type":"string",
       "pattern":"ALL|[a-z]{2}(-gov)?-[a-z]+-\\d{1}"
     },
+    "MaxLayerListItems":{
+      "type":"integer",
+      "max":50,
+      "min":1
+    },
     "MaxListItems":{
       "type":"integer",
       "max":10000,
@@ -1857,6 +2410,10 @@
       "max":100,
       "min":1,
       "pattern":"([a-zA-Z0-9-_.]+)"
+    },
+    "OrganizationId":{
+      "type":"string",
+      "pattern":"o-[a-z0-9]{10,32}"
     },
     "PolicyLengthExceededException":{
       "type":"structure",
@@ -1887,6 +2444,74 @@
     "Principal":{
       "type":"string",
       "pattern":".*"
+    },
+    "PublishLayerVersionRequest":{
+      "type":"structure",
+      "required":[
+        "LayerName",
+        "Content"
+      ],
+      "members":{
+        "LayerName":{
+          "shape":"LayerName",
+          "documentation":"<p>The name of the layer.</p>",
+          "location":"uri",
+          "locationName":"LayerName"
+        },
+        "Description":{
+          "shape":"Description",
+          "documentation":"<p>The description of the version.</p>"
+        },
+        "Content":{
+          "shape":"LayerVersionContentInput",
+          "documentation":"<p>The function layer archive.</p>"
+        },
+        "CompatibleRuntimes":{
+          "shape":"CompatibleRuntimes",
+          "documentation":"<p>A list of compatible <a href=\"http://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html\">function runtimes</a>. Used for filtering with <a>ListLayers</a> and <a>ListLayerVersions</a>.</p>"
+        },
+        "LicenseInfo":{
+          "shape":"LicenseInfo",
+          "documentation":"<p>The layer's software license. It can be any of the following:</p> <ul> <li> <p>An <a href=\"https://spdx.org/licenses/\">SPDX license identifier</a>. For example, <code>MIT</code>.</p> </li> <li> <p>The URL of a license hosted on the internet. For example, <code>https://opensource.org/licenses/MIT</code>.</p> </li> <li> <p>The full text of the license.</p> </li> </ul>"
+        }
+      }
+    },
+    "PublishLayerVersionResponse":{
+      "type":"structure",
+      "members":{
+        "Content":{
+          "shape":"LayerVersionContentOutput",
+          "documentation":"<p>Details about the layer version.</p>"
+        },
+        "LayerArn":{
+          "shape":"LayerArn",
+          "documentation":"<p>The Amazon Resource Name (ARN) of the function layer.</p>"
+        },
+        "LayerVersionArn":{
+          "shape":"LayerVersionArn",
+          "documentation":"<p>The ARN of the layer version.</p>"
+        },
+        "Description":{
+          "shape":"Description",
+          "documentation":"<p>The description of the version.</p>"
+        },
+        "CreatedDate":{
+          "shape":"Timestamp",
+          "documentation":"<p>The date that the layer version was created, in <a href=\"https://www.w3.org/TR/NOTE-datetime\">ISO-8601 format</a> (YYYY-MM-DDThh:mm:ss.sTZD).</p>"
+        },
+        "Version":{
+          "shape":"LayerVersionNumber",
+          "documentation":"<p>The version number.</p>"
+        },
+        "CompatibleRuntimes":{
+          "shape":"CompatibleRuntimes",
+          "documentation":"<p>The layer's compatible runtimes.</p>"
+        },
+        "LicenseInfo":{
+          "shape":"LicenseInfo",
+          "documentation":"<p>The layer's software license.</p>"
+        }
+      }
     },
     "PublishVersionRequest":{
       "type":"structure",
@@ -1921,7 +2546,7 @@
       "members":{
         "FunctionName":{
           "shape":"FunctionName",
-          "documentation":"<p>The name of the lambda function.</p> <p class=\"title\"> <b>Name formats</b> </p> <ul> <li> <p> <b>Function name</b> - <code>MyFunction</code>.</p> </li> <li> <p> <b>Function ARN</b> - <code>arn:aws:lambda:us-west-2:123456789012:function:MyFunction</code>.</p> </li> <li> <p> <b>Partial ARN</b> - <code>123456789012:function:MyFunction</code>.</p> </li> </ul> <p>The length constraint applies only to the full ARN. If you specify only the function name, it is limited to 64 characters in length.</p>",
+          "documentation":"<p>The name of the Lambda function.</p> <p class=\"title\"> <b>Name formats</b> </p> <ul> <li> <p> <b>Function name</b> - <code>MyFunction</code>.</p> </li> <li> <p> <b>Function ARN</b> - <code>arn:aws:lambda:us-west-2:123456789012:function:MyFunction</code>.</p> </li> <li> <p> <b>Partial ARN</b> - <code>123456789012:function:MyFunction</code>.</p> </li> </ul> <p>The length constraint applies only to the full ARN. If you specify only the function name, it is limited to 64 characters in length.</p>",
           "location":"uri",
           "locationName":"FunctionName"
         },
@@ -1937,6 +2562,40 @@
       "min":1,
       "pattern":"(|[a-zA-Z0-9$_-]+)"
     },
+    "RemoveLayerVersionPermissionRequest":{
+      "type":"structure",
+      "required":[
+        "LayerName",
+        "VersionNumber",
+        "StatementId"
+      ],
+      "members":{
+        "LayerName":{
+          "shape":"LayerName",
+          "documentation":"<p>The name of the layer.</p>",
+          "location":"uri",
+          "locationName":"LayerName"
+        },
+        "VersionNumber":{
+          "shape":"LayerVersionNumber",
+          "documentation":"<p>The version number.</p>",
+          "location":"uri",
+          "locationName":"VersionNumber"
+        },
+        "StatementId":{
+          "shape":"StatementId",
+          "documentation":"<p>The identifier that was specified when the statement was added.</p>",
+          "location":"uri",
+          "locationName":"StatementId"
+        },
+        "RevisionId":{
+          "shape":"String",
+          "documentation":"<p>Only update the policy if the revision ID matches the ID specified. Use this option to avoid modifying a policy that has changed since you last read it.</p>",
+          "location":"querystring",
+          "locationName":"RevisionId"
+        }
+      }
+    },
     "RemovePermissionRequest":{
       "type":"structure",
       "required":[
@@ -1946,7 +2605,7 @@
       "members":{
         "FunctionName":{
           "shape":"FunctionName",
-          "documentation":"<p>The name of the lambda function.</p> <p class=\"title\"> <b>Name formats</b> </p> <ul> <li> <p> <b>Function name</b> - <code>MyFunction</code>.</p> </li> <li> <p> <b>Function ARN</b> - <code>arn:aws:lambda:us-west-2:123456789012:function:MyFunction</code>.</p> </li> <li> <p> <b>Partial ARN</b> - <code>123456789012:function:MyFunction</code>.</p> </li> </ul> <p>The length constraint applies only to the full ARN. If you specify only the function name, it is limited to 64 characters in length.</p>",
+          "documentation":"<p>The name of the Lambda function.</p> <p class=\"title\"> <b>Name formats</b> </p> <ul> <li> <p> <b>Function name</b> - <code>MyFunction</code>.</p> </li> <li> <p> <b>Function ARN</b> - <code>arn:aws:lambda:us-west-2:123456789012:function:MyFunction</code>.</p> </li> <li> <p> <b>Partial ARN</b> - <code>123456789012:function:MyFunction</code>.</p> </li> </ul> <p>The length constraint applies only to the full ARN. If you specify only the function name, it is limited to 64 characters in length.</p>",
           "location":"uri",
           "locationName":"FunctionName"
         },
@@ -2038,11 +2697,14 @@
         "java8",
         "python2.7",
         "python3.6",
+        "python3.7",
         "dotnetcore1.0",
         "dotnetcore2.0",
         "dotnetcore2.1",
         "nodejs4.3-edge",
-        "go1.x"
+        "go1.x",
+        "ruby2.5",
+        "provided"
       ]
     },
     "S3Bucket":{
@@ -2275,21 +2937,21 @@
       "members":{
         "UUID":{
           "shape":"String",
-          "documentation":"<p>The event source mapping identifier.</p>",
+          "documentation":"<p>The identifier of the event source mapping.</p>",
           "location":"uri",
           "locationName":"UUID"
         },
         "FunctionName":{
           "shape":"FunctionName",
-          "documentation":"<p>The name of the lambda function.</p> <p class=\"title\"> <b>Name formats</b> </p> <ul> <li> <p> <b>Function name</b> - <code>MyFunction</code>.</p> </li> <li> <p> <b>Function ARN</b> - <code>arn:aws:lambda:us-west-2:123456789012:function:MyFunction</code>.</p> </li> <li> <p> <b>Version or Alias ARN</b> - <code>arn:aws:lambda:us-west-2:123456789012:function:MyFunction:PROD</code>.</p> </li> <li> <p> <b>Partial ARN</b> - <code>123456789012:function:MyFunction</code>.</p> </li> </ul> <p>The length constraint applies only to the full ARN. If you specify only the function name, it is limited to 64 characters in length.</p>"
+          "documentation":"<p>The name of the Lambda function.</p> <p class=\"title\"> <b>Name formats</b> </p> <ul> <li> <p> <b>Function name</b> - <code>MyFunction</code>.</p> </li> <li> <p> <b>Function ARN</b> - <code>arn:aws:lambda:us-west-2:123456789012:function:MyFunction</code>.</p> </li> <li> <p> <b>Version or Alias ARN</b> - <code>arn:aws:lambda:us-west-2:123456789012:function:MyFunction:PROD</code>.</p> </li> <li> <p> <b>Partial ARN</b> - <code>123456789012:function:MyFunction</code>.</p> </li> </ul> <p>The length constraint applies only to the full ARN. If you specify only the function name, it's limited to 64 characters in length.</p>"
         },
         "Enabled":{
           "shape":"Enabled",
-          "documentation":"<p>Specifies whether AWS Lambda should actively poll the stream or not. If disabled, AWS Lambda will not poll the stream.</p>"
+          "documentation":"<p>Disables the event source mapping to pause polling and invocation.</p>"
         },
         "BatchSize":{
           "shape":"BatchSize",
-          "documentation":"<p>The largest number of records that AWS Lambda will retrieve from your event source at the time of invoking your function. Your function receives an event with all the retrieved records.</p>"
+          "documentation":"<p>The maximum number of items to retrieve in a single batch.</p> <ul> <li> <p> <b>Amazon Kinesis</b> - Default 100. Max 10,000.</p> </li> <li> <p> <b>Amazon DynamoDB Streams</b> - Default 100. Max 1,000.</p> </li> <li> <p> <b>Amazon Simple Queue Service</b> - Default 10. Max 10.</p> </li> </ul>"
         }
       }
     },
@@ -2299,7 +2961,7 @@
       "members":{
         "FunctionName":{
           "shape":"FunctionName",
-          "documentation":"<p>The name of the lambda function.</p> <p class=\"title\"> <b>Name formats</b> </p> <ul> <li> <p> <b>Function name</b> - <code>MyFunction</code>.</p> </li> <li> <p> <b>Function ARN</b> - <code>arn:aws:lambda:us-west-2:123456789012:function:MyFunction</code>.</p> </li> <li> <p> <b>Partial ARN</b> - <code>123456789012:function:MyFunction</code>.</p> </li> </ul> <p>The length constraint applies only to the full ARN. If you specify only the function name, it is limited to 64 characters in length.</p>",
+          "documentation":"<p>The name of the Lambda function.</p> <p class=\"title\"> <b>Name formats</b> </p> <ul> <li> <p> <b>Function name</b> - <code>MyFunction</code>.</p> </li> <li> <p> <b>Function ARN</b> - <code>arn:aws:lambda:us-west-2:123456789012:function:MyFunction</code>.</p> </li> <li> <p> <b>Partial ARN</b> - <code>123456789012:function:MyFunction</code>.</p> </li> </ul> <p>The length constraint applies only to the full ARN. If you specify only the function name, it is limited to 64 characters in length.</p>",
           "location":"uri",
           "locationName":"FunctionName"
         },
@@ -2339,7 +3001,7 @@
       "members":{
         "FunctionName":{
           "shape":"FunctionName",
-          "documentation":"<p>The name of the lambda function.</p> <p class=\"title\"> <b>Name formats</b> </p> <ul> <li> <p> <b>Function name</b> - <code>MyFunction</code>.</p> </li> <li> <p> <b>Function ARN</b> - <code>arn:aws:lambda:us-west-2:123456789012:function:MyFunction</code>.</p> </li> <li> <p> <b>Partial ARN</b> - <code>123456789012:function:MyFunction</code>.</p> </li> </ul> <p>The length constraint applies only to the full ARN. If you specify only the function name, it is limited to 64 characters in length.</p>",
+          "documentation":"<p>The name of the Lambda function.</p> <p class=\"title\"> <b>Name formats</b> </p> <ul> <li> <p> <b>Function name</b> - <code>MyFunction</code>.</p> </li> <li> <p> <b>Function ARN</b> - <code>arn:aws:lambda:us-west-2:123456789012:function:MyFunction</code>.</p> </li> <li> <p> <b>Partial ARN</b> - <code>123456789012:function:MyFunction</code>.</p> </li> </ul> <p>The length constraint applies only to the full ARN. If you specify only the function name, it is limited to 64 characters in length.</p>",
           "location":"uri",
           "locationName":"FunctionName"
         },
@@ -2390,6 +3052,10 @@
         "RevisionId":{
           "shape":"String",
           "documentation":"<p>An optional value you can use to ensure you are updating the latest update of the function version or alias. If the <code>RevisionID</code> you pass doesn't match the latest <code>RevisionId</code> of the function or alias, it will fail with an error message, advising you to retrieve the latest function version or alias <code>RevisionID</code> using either <a>GetFunction</a> or <a>GetAlias</a>.</p>"
+        },
+        "Layers":{
+          "shape":"LayerList",
+          "documentation":"<p>A list of <a href=\"http://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html\">function layers</a> to add to the function's execution environment.</p>"
         }
       }
     },

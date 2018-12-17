@@ -160,6 +160,7 @@ final class AddOperations {
             operationModel.setPaginated(isPaginated(op));
             operationModel.setEndpointOperation(op.isEndpointoperation());
             operationModel.setEndpointDiscovery(op.getEndpointdiscovery());
+            operationModel.setEndpointTrait(op.getEndpoint());
 
             Input input = op.getInput();
             if (input != null) {

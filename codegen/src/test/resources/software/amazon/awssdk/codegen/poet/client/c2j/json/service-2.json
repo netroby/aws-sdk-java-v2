@@ -34,8 +34,10 @@
       "name":"BatchWriteItem",
       "http":{
         "method":"POST",
-        "requestUri":"/"
-      },
+        "requestUri":"/",
+        "endpoint": {
+          "hostPrefix": "{StringMember}-foo."
+        },
       "input":{"shape":"BatchWriteItemInput"},
       "output":{"shape":"BatchWriteItemOutput"},
       "errors":[
@@ -597,20 +599,12 @@
       }
     }
   },
-  "shapes":{
-    "AttributeAction":{
-      "type":"string",
-      "enum":[
-        "ADD",
-        "PUT",
-        "DELETE"
-      ]
-    },
-    "AttributeDefinition":{
-      "type":"structure",
-      "required":[
-        "AttributeName",
-        "AttributeType"
+  "shapes": {
+    "APostOperationRequest": {
+      "type": "structure",
+      "required": [
+        "SomeNestedMember",
+        "StringMember"
       ],
       "members":{
         "AttributeName":{
@@ -620,6 +614,14 @@
         "AttributeType":{
           "shape":"ScalarAttributeType",
           "documentation":"<p>The data type for the attribute, where:</p> <ul> <li> <p> <code>S</code> - the attribute is of type String</p> </li> <li> <p> <code>N</code> - the attribute is of type Number</p> </li> <li> <p> <code>B</code> - the attribute is of type Binary</p> </li> </ul>"
+        "OptionalMember": {
+          "shape": "dateType",
+          "documentation": "<p>An optional member</p>"
+        },
+        "StringMember": {
+          "shape": "String",
+          "hostLabel": true,
+          "documentation": "<p>Member to compute the endpoint host</p>"
         }
       },
       "documentation":"<p>Represents an attribute for describing the key schema for the table and indexes.</p>"

@@ -28,6 +28,7 @@ import software.amazon.awssdk.core.interceptor.ExecutionInterceptorChain;
 import software.amazon.awssdk.core.interceptor.InterceptorContext;
 import software.amazon.awssdk.core.interceptor.SdkExecutionAttribute;
 import software.amazon.awssdk.http.SdkHttpFullRequest;
+import software.amazon.awssdk.utils.StringUtils;
 
 @SdkProtectedApi
 public abstract class BaseClientHandler {
@@ -49,9 +50,7 @@ public abstract class BaseClientHandler {
 
         runBeforeMarshallingInterceptors(executionContext);
         SdkHttpFullRequest request = executionParams.getMarshaller().marshall(inputT);
-
-        executionContext.executionAttributes().putAttribute(SdkExecutionAttribute.SERVICE_NAME,
-                                                            clientConfiguration.option(SdkClientOption.SERVICE_NAME));
+        request = modifyEndpointHostIfNeeded(request, clientConfiguration, executionParams.hostPrefixExpression());
 
         addHttpRequest(executionContext, request);
         runAfterMarshallingInterceptors(executionContext);
@@ -74,6 +73,23 @@ public abstract class BaseClientHandler {
     private static void runBeforeMarshallingInterceptors(ExecutionContext executionContext) {
         executionContext.interceptorChain().beforeMarshalling(executionContext.interceptorContext(),
                                                               executionContext.executionAttributes());
+    }
+
+    /**
+     * Modifies the given {@link SdkHttpFullRequest} with new host if host prefix is enabled and set.
+     */
+    private static SdkHttpFullRequest modifyEndpointHostIfNeeded(SdkHttpFullRequest originalRequest,
+                                                                 SdkClientConfiguration clientConfiguration,
+                                                                 String hostPrefix) {
+        Boolean disableHostPrefixInjection = clientConfiguration.option(SdkAdvancedClientOption.DISABLE_HOST_PREFIX_INJECTION);
+        if ((disableHostPrefixInjection != null && disableHostPrefixInjection.equals(Boolean.TRUE)) ||
+            StringUtils.isEmpty(hostPrefix)) {
+            return originalRequest;
+        }
+
+        return originalRequest.toBuilder()
+                              .host(hostPrefix + originalRequest.host())
+                              .build();
     }
 
     private static void addHttpRequest(ExecutionContext executionContext, SdkHttpFullRequest request) {
@@ -123,7 +139,8 @@ public abstract class BaseClientHandler {
         SdkRequest originalRequest = params.getInput();
         ExecutionAttributes executionAttributes = new ExecutionAttributes()
             .putAttribute(SdkExecutionAttribute.SERVICE_CONFIG,
-                          clientConfiguration.option(SdkClientOption.SERVICE_CONFIGURATION));
+                          clientConfiguration.option(SdkClientOption.SERVICE_CONFIGURATION))
+            .putAttribute(SdkExecutionAttribute.SERVICE_NAME, clientConfiguration.option(SdkClientOption.SERVICE_NAME));
 
         ExecutionInterceptorChain interceptorChain =
                 new ExecutionInterceptorChain(clientConfiguration.option(SdkClientOption.EXECUTION_INTERCEPTORS));

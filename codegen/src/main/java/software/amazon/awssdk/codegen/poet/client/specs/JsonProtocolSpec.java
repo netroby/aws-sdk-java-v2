@@ -163,12 +163,15 @@ public class JsonProtocolSpec implements ProtocolSpec {
         CodeBlock.Builder codeBlock = CodeBlock
             .builder()
             .add("\n\nreturn clientHandler.execute(new $T<$T, $T>()\n" +
+                 ".withOperationName(\"$N\")\n" +
                  ".withResponseHandler($N)\n" +
                  ".withErrorResponseHandler($N)\n" +
+                 hostPrefixExpression(opModel) +
                  ".withInput($L)\n",
                  ClientExecutionParams.class,
                  requestType,
                  responseType,
+                 opModel.getOperationName(),
                  "responseHandler",
                  "errorResponseHandler",
                  opModel.getInput().getVariableName());
@@ -227,11 +230,13 @@ public class JsonProtocolSpec implements ProtocolSpec {
         String protocolFactory = protocolFactoryLiteral(opModel);
         String customerResponseHandler = opModel.hasEventStreamOutput() ? "asyncResponseHandler" : "asyncResponseTransformer";
         builder.add("\n\n$L clientHandler.execute(new $T<$T, $T>()\n" +
+                    ".withOperationName(\"$N\")\n" +
                     ".withMarshaller(new $T($L))\n" +
                     "$L" +
                     "$L" +
                     ".withResponseHandler($L)\n" +
                     ".withErrorResponseHandler(errorResponseHandler)\n" +
+                    hostPrefixExpression(opModel) +
                     asyncRequestBody +
                     ".withInput($L)$L)$L;",
                     // If the operation has an event stream output we use a different future so we don't return the one
@@ -240,6 +245,7 @@ public class JsonProtocolSpec implements ProtocolSpec {
                     ClientExecutionParams.class,
                     requestType,
                     opModel.hasEventStreamOutput() && !isRestJson ? SdkResponse.class : pojoResponseType,
+                    opModel.getOperationName(),
                     marshaller,
                     protocolFactory,
                     opModel.hasEventStreamInput() ? CodeBlock.builder()
