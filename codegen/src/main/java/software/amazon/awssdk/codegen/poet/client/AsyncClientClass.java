@@ -193,9 +193,11 @@ public final class AsyncClientClass extends AsyncClientInterface {
             builder.addStatement("\n\nString key = clientConfiguration.option($T.CREDENTIALS_PROVIDER).resolveCredentials()" +
                                  ".accessKeyId()", AwsClientOption.class);
             builder.addStatement("$T cachedEndpoint = $L.get(key, $L.endpointDiscoveryRequest(), " +
-                                 "clientConfiguration.option(SdkClientOption.ENDPOINT))",
-                                 URI.class, "endpointDiscoveryCache", opModel.getInputShape().getVariable().getVariableName());
-            builder.addStatement("clientConfiguration.copy(o -> o.option($T.ENDPOINT, cachedEndpoint))", SdkClientOption.class);
+                                 "clientConfiguration.option($T.ENDPOINT))",
+                                 URI.class,
+                                 "endpointDiscoveryCache",
+                                 opModel.getInputShape().getVariable().getVariableName(),
+                                 SdkClientOption.class);
         }
 
         builder.addCode(protocolSpec.asyncExecutionHandler(model, opModel))

@@ -165,9 +165,11 @@ public class SyncClientClass implements ClassSpec {
             method.addStatement("\n\nString key = clientConfiguration.option($T.CREDENTIALS_PROVIDER)." +
                                 "resolveCredentials().accessKeyId()", AwsClientOption.class);
             method.addStatement("$T cachedEndpoint = $L.get(key, $L.endpointDiscoveryRequest(), " +
-                                "clientConfiguration.option(SdkClientOption.ENDPOINT))",
-                                URI.class, "endpointDiscoveryCache", opModel.getInputShape().getVariable().getVariableName());
-            method.addStatement("clientConfiguration.copy(o -> o.option($T.ENDPOINT, cachedEndpoint))", SdkClientOption.class);
+                                "clientConfiguration.option($T.ENDPOINT))",
+                                URI.class,
+                                "endpointDiscoveryCache",
+                                opModel.getInputShape().getVariable().getVariableName(),
+                                SdkClientOption.class);
         }
 
         method.addCode(protocolSpec.executionHandler(opModel));

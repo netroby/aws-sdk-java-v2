@@ -158,8 +158,8 @@ final class AddOperations {
             operationModel.setDocumentation(op.getDocumentation());
             operationModel.setIsAuthenticated(isAuthenticated(op));
             operationModel.setPaginated(isPaginated(op));
-            operationModel.setEndpointOperation(op.isEndpointoperation());
-            operationModel.setEndpointDiscovery(op.getEndpointdiscovery());
+            operationModel.setEndpointOperation(op.isEndpointOperation());
+            operationModel.setEndpointDiscovery(op.getEndpointDiscovery());
             operationModel.setEndpointTrait(op.getEndpoint());
 
             Input input = op.getInput();

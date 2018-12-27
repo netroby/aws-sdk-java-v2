@@ -167,6 +167,7 @@ public class JsonProtocolSpec implements ProtocolSpec {
                  ".withResponseHandler($N)\n" +
                  ".withErrorResponseHandler($N)\n" +
                  hostPrefixExpression(opModel) +
+                 discoveredEndpoint(opModel) +
                  ".withInput($L)\n",
                  ClientExecutionParams.class,
                  requestType,

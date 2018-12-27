@@ -39,9 +39,11 @@ public class Operation {
 
     private boolean requiresApiKey;
 
-    private EndpointDiscovery endpointdiscovery;
+    @JsonProperty("endpointdiscovery")
+    private EndpointDiscovery endpointDiscovery;
 
-    private boolean endpointoperation;
+    @JsonProperty("endpointoperation")
+    private boolean endpointOperation;
 
     private EndpointTrait endpoint;
 
@@ -143,20 +145,20 @@ public class Operation {
         this.requiresApiKey = requiresApiKey;
     }
 
-    public EndpointDiscovery getEndpointdiscovery() {
-        return endpointdiscovery;
+    public EndpointDiscovery getEndpointDiscovery() {
+        return endpointDiscovery;
     }
 
-    public void setEndpointdiscovery(EndpointDiscovery endpointdiscovery) {
-        this.endpointdiscovery = endpointdiscovery;
+    public void setEndpointDiscovery(EndpointDiscovery endpointDiscovery) {
+        this.endpointDiscovery = endpointDiscovery;
     }
 
-    public boolean isEndpointoperation() {
-        return endpointoperation;
+    public boolean isEndpointOperation() {
+        return endpointOperation;
     }
 
-    public void setEndpointoperation(boolean endpointoperation) {
-        this.endpointoperation = endpointoperation;
+    public void setEndpointOperation(boolean endpointOperation) {
+        this.endpointOperation = endpointOperation;
     }
 
     public EndpointTrait getEndpoint() {

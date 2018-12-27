@@ -87,8 +87,9 @@ final class DefaultEndpointDiscoveryTestClient implements EndpointDiscoveryTestC
                 operationMetadata);
 
         return clientHandler.execute(new ClientExecutionParams<DescribeEndpointsRequest, DescribeEndpointsResponse>()
-                .withResponseHandler(responseHandler).withErrorResponseHandler(errorResponseHandler)
-                .withInput(describeEndpointsRequest).withMarshaller(new DescribeEndpointsRequestMarshaller(protocolFactory)));
+                .withOperationName("DescribeEndpoints").withResponseHandler(responseHandler)
+                .withErrorResponseHandler(errorResponseHandler).withInput(describeEndpointsRequest)
+                .withMarshaller(new DescribeEndpointsRequestMarshaller(protocolFactory)));
     }
 
     /**
@@ -121,11 +122,11 @@ final class DefaultEndpointDiscoveryTestClient implements EndpointDiscoveryTestC
         String key = clientConfiguration.option(AwsClientOption.CREDENTIALS_PROVIDER).resolveCredentials().accessKeyId();
         URI cachedEndpoint = endpointDiscoveryCache.get(key, testDiscoveryIdentifiersRequiredRequest.endpointDiscoveryRequest(),
                 clientConfiguration.option(SdkClientOption.ENDPOINT));
-        clientConfiguration.copy(o -> o.option(SdkClientOption.ENDPOINT, cachedEndpoint));
 
         return clientHandler
                 .execute(new ClientExecutionParams<TestDiscoveryIdentifiersRequiredRequest, TestDiscoveryIdentifiersRequiredResponse>()
-                        .withResponseHandler(responseHandler).withErrorResponseHandler(errorResponseHandler)
+                        .withOperationName("TestDiscoveryIdentifiersRequired").withResponseHandler(responseHandler)
+                        .withErrorResponseHandler(errorResponseHandler).discoveredEndpoint(cachedEndpoint)
                         .withInput(testDiscoveryIdentifiersRequiredRequest)
                         .withMarshaller(new TestDiscoveryIdentifiersRequiredRequestMarshaller(protocolFactory)));
     }
@@ -159,10 +160,10 @@ final class DefaultEndpointDiscoveryTestClient implements EndpointDiscoveryTestC
         String key = clientConfiguration.option(AwsClientOption.CREDENTIALS_PROVIDER).resolveCredentials().accessKeyId();
         URI cachedEndpoint = endpointDiscoveryCache.get(key, testDiscoveryOptionalRequest.endpointDiscoveryRequest(),
                 clientConfiguration.option(SdkClientOption.ENDPOINT));
-        clientConfiguration.copy(o -> o.option(SdkClientOption.ENDPOINT, cachedEndpoint));
 
         return clientHandler.execute(new ClientExecutionParams<TestDiscoveryOptionalRequest, TestDiscoveryOptionalResponse>()
-                .withResponseHandler(responseHandler).withErrorResponseHandler(errorResponseHandler)
+                .withOperationName("TestDiscoveryOptional").withResponseHandler(responseHandler)
+                .withErrorResponseHandler(errorResponseHandler).discoveredEndpoint(cachedEndpoint)
                 .withInput(testDiscoveryOptionalRequest)
                 .withMarshaller(new TestDiscoveryOptionalRequestMarshaller(protocolFactory)));
     }
@@ -196,10 +197,10 @@ final class DefaultEndpointDiscoveryTestClient implements EndpointDiscoveryTestC
         String key = clientConfiguration.option(AwsClientOption.CREDENTIALS_PROVIDER).resolveCredentials().accessKeyId();
         URI cachedEndpoint = endpointDiscoveryCache.get(key, testDiscoveryRequiredRequest.endpointDiscoveryRequest(),
                 clientConfiguration.option(SdkClientOption.ENDPOINT));
-        clientConfiguration.copy(o -> o.option(SdkClientOption.ENDPOINT, cachedEndpoint));
 
         return clientHandler.execute(new ClientExecutionParams<TestDiscoveryRequiredRequest, TestDiscoveryRequiredResponse>()
-                .withResponseHandler(responseHandler).withErrorResponseHandler(errorResponseHandler)
+                .withOperationName("TestDiscoveryRequired").withResponseHandler(responseHandler)
+                .withErrorResponseHandler(errorResponseHandler).discoveredEndpoint(cachedEndpoint)
                 .withInput(testDiscoveryRequiredRequest)
                 .withMarshaller(new TestDiscoveryRequiredRequestMarshaller(protocolFactory)));
     }
